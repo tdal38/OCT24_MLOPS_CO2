@@ -24,3 +24,4 @@ stages:
       - config.py
     outs:
       - models
+      - outputs/metrics.json
