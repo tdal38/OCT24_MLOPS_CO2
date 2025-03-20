@@ -1,7 +1,6 @@
 [core]
     remote = dagshub_remote
     autostage = true
-['remote "dagshub_remote"']
-    url = https://dagshub.com/tiffany.dalmais/OCT24_MLOPS_CO2.dvc
-['remote "origin"']
+
+[remote "dagshub_remote"]
     url = https://dagshub.com/tiffany.dalmais/OCT24_MLOPS_CO2.dvc
