@@ -1,0 +1,26 @@
+stages:
+  recup_raw_data:
+    cmd: python src/data/recup_raw_data.py
+    deps:
+      - src/data/recup_raw_data.py
+      - config.py
+    outs:
+      - data/raw
+
+  preprocessing:
+    cmd: python src/data/preprocessing.py
+    deps:
+      - src/data/preprocessing.py
+      - data/raw
+      - config.py
+    outs:
+      - data/processed
+
+  modelisation:
+    cmd: python src/models/modelisation.py
+    deps:
+      - src/models/modelisation.py
+      - data/processed
+      - config.py
+    outs:
+      - models

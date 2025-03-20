@@ -55,12 +55,30 @@ model_final = RandomForestRegressor(bootstrap=False, max_features=0.75, min_samp
 model_final.fit(X_train_scaled, y_train)
 results_model_final = model_final.predict(X_test_scaled)
 
-# Calcul RMSE
-mse_mf = mean_squared_error(y_test, results_model_final)
-rmse_mf = np.sqrt(mse_mf)
-print("RMSE:", rmse_mf)
+# Chemin complet vers le fichier metrics.json :
+metrics_file = os.path.join(config.OUTPUTS_DIR, "metrics.json")
 
-# Analyse erreurs
+# Création du dossier et fichier si nécessaire : 
+if not os.path.exists(metrics_file):
+    os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
+    with open(metrics_file, "w") as f:
+        json.dump({}, f, indent=4)
+
+
+# Affichage et enregistrement des metrics : 
+# Import des fonctions créées dans le fichier metrics.py : 
+from src.utils.metrics import compute_metrics, save_metrics
+
+# Calcul et affichage des metrics : 
+metrics = compute_metrics(y_test, results_model_final)
+print(f"RMSE: {metrics['rmse']:.4f}")
+print(f"R²  : {metrics['r2']:.4f}")
+
+# Enregistrement des metrics : 
+metrics_file = os.path.join(config.OUTPUTS_DIR, "metrics.json")
+save_metrics(metrics, metrics_file)
+
+# Analyse des erreurs : 
 df_results_final = pd.DataFrame({'y_true': y_test, 'y_pred': results_model_final})
 df_results_final['error'] = abs(df_results_final['y_true'] - df_results_final['y_pred'])
 seuil = 20
@@ -71,8 +89,15 @@ print(outliers.describe())
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 model_filename = f"RandomForest_{timestamp}.pkl"
 
+# Enregistrement du fichier de données prétraitées : 
+# Définir les chemins vers les dossiers existants :
+models_dir = config.MODELS_DIR
+
+# Créer les dossiers s'ils n'existent pas :
+os.makedirs(models_dir, exist_ok=True)
+
 # Construction du chemin complet vers le fichier dans le dossier models existant :
-model_path = os.path.join(config.MODELS_DIR, model_filename)
+model_path = os.path.join(models_dir, model_filename)
 
 # Enregistrement du modèle entraîné : 
 joblib.dump(model_final, model_path)
