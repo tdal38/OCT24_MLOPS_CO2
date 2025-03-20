@@ -53,12 +53,12 @@ stages:
       nfiles: 1
     - path: src/models/modelisation.py
       hash: md5
-      md5: d8aa12052e452415f7aabdc53036453d
-      size: 4605
+      md5: 295a98f329da8b465864209d9717e644
+      size: 5289
     outs:
     - path: models
       hash: md5
-      md5: 64413dab99597124e1d233979a770818.dir
+      md5: 010ff360871e5249e80a7238b91d8b33.dir
       size: 427185413
       nfiles: 1
     - path: outputs/metrics.json
