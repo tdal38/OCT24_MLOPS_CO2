@@ -1,5 +1,5 @@
 {
     "raw_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/raw/DF_Raw_20250320_091641.csv",
     "processed_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/processed/DF_Processed_20250320_091806.csv",
-    "trained_model": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_20250320_093240.pkl"
+    "trained_model": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_20250320_144002.pkl"
 }
