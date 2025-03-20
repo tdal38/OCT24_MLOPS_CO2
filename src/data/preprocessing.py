@@ -189,6 +189,10 @@ df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].as
 processed_dir = config.PROCESSED_DIR
 metadata_dir = config.METADATA_DIR
 
+# Créer les dossiers s'ils n'existent pas :
+os.makedirs(processed_dir, exist_ok=True)
+os.makedirs(metadata_dir, exist_ok=True)
+
 # Génération d'un timestamp au format YYYYMMDD_HHMMSS :
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_filename = f"DF_Processed_{timestamp}.csv"

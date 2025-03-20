@@ -1,0 +1,63 @@
+schema: '2.0'
+stages:
+  recup_raw_data:
+    cmd: python src/data/recup_raw_data.py
+    deps:
+    - path: config.py
+      hash: md5
+      md5: 1dbcc353d103154ab921a31fd97dc224
+      size: 496
+    - path: src/data/recup_raw_data.py
+      hash: md5
+      md5: c6f2975cedcecb294483892b115c36d4
+      size: 2871
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: bf7173f60bfd28f4b2f096313a85b3e5.dir
+      size: 16789272
+      nfiles: 1
+  preprocessing:
+    cmd: python src/data/preprocessing.py
+    deps:
+    - path: config.py
+      hash: md5
+      md5: 1dbcc353d103154ab921a31fd97dc224
+      size: 496
+    - path: data/raw
+      hash: md5
+      md5: bf7173f60bfd28f4b2f096313a85b3e5.dir
+      size: 16789272
+      nfiles: 1
+    - path: src/data/preprocessing.py
+      hash: md5
+      md5: 3e781a82ed4e82537422ca3d8110a033
+      size: 8512
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: b42c692b6ea4674bf00bc7f0e612fd39.dir
+      size: 21420756
+      nfiles: 1
+  modelisation:
+    cmd: python src/models/modelisation.py
+    deps:
+    - path: config.py
+      hash: md5
+      md5: 1dbcc353d103154ab921a31fd97dc224
+      size: 496
+    - path: data/processed
+      hash: md5
+      md5: b42c692b6ea4674bf00bc7f0e612fd39.dir
+      size: 21420756
+      nfiles: 1
+    - path: src/models/modelisation.py
+      hash: md5
+      md5: 1c439fd8a35ad7c6b1a5acf0913d52bd
+      size: 4109
+    outs:
+    - path: models
+      hash: md5
+      md5: 78ffc6dab52489765e2ceb0a086732c8.dir
+      size: 427185361
+      nfiles: 1
