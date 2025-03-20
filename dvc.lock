@@ -58,6 +58,10 @@ stages:
     outs:
     - path: models
       hash: md5
-      md5: 78ffc6dab52489765e2ceb0a086732c8.dir
+      md5: 7db098b180bdcb73004deabe838ebcdc.dir
       size: 427185361
       nfiles: 1
+    - path: outputs/metrics.json
+      hash: md5
+      md5: 417125dfbde03047701b24fc85a60f4a
+      size: 63
