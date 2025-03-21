@@ -139,8 +139,10 @@ MLFLow (accessible par défaut sur http://127.0.0.1:5000).
 
 En conclusion, chaque outil joue un rôle spécifique :
     - Git versionne le code et les fichiers de configuration.
-    - DVC gère le suivi des données et la reproductibilité du pipeline.
+    - DVC gère le suivi des données et la reproductibilité de la pipeline.
     - MLflow permet de suivre les expérimentations, les paramètres, les métriques et les modèles.
+L'interface de DagsHub permet de visualiser l'ensemble des fichiers et de suivre les expérimentations et versions de 
+modèles sur les onglets correspondants. 
 
 À chaque modification, le cycle complet doit se dérouler ainsi (dans cet ordre précis) :
 
