@@ -155,7 +155,7 @@ modèles sur les onglets correspondants.
     3. Commit et push Git (incluant dvc.yaml, dvc.lock et le code) via les commandes suivantes : 
         git add .
         git commit -m "Description du commit"
-        git push origin main (ou autre nom de la branche utilisée)
+        git push origin main            # ou autre nom de la branche utilisée
 
     4. Exécution de dvc push (pour transférer les données volumineuses vers DagsHub). 
 
