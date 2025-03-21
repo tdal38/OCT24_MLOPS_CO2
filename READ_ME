@@ -1,5 +1,5 @@
 """
-Etapes à suivre pour récupérer et exécuter la projet : 
+Etapes à suivre pour récupérer et exécuter le projet : 
 
 1. Cloner le repository : 
 git clone https://dagshub.com/tiffany.dalmais/OCT24_MLOPS_CO2.git
@@ -16,7 +16,7 @@ pip install dvc
 5. Installer MLflow et dagshub :
 pip install mlflow dagshub
 
-6. Configurer l'authentification (optionnel, pour éviter de ressaisir ses identifiants à chaque fois) : 
+6. Configurer l'authentification (optionnel mais utile pour éviter de ressaisir ses identifiants à chaque fois) : 
     a. Ouvrir un terminal et créer/modifier le fichier ~/.netrc : 
     nano ~/.netrc
 
