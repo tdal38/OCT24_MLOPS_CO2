@@ -76,10 +76,10 @@ os.makedirs(metadata_dir, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_filename = f"DF_Raw_{timestamp}.csv"
 
-# Construction du chemin complet vers le fichier dans le dossier raw existant : 
+# Construction du chemin complet vers le fichier dans le dossier "raw" existant : 
 output_filepath = os.path.join(raw_dir, output_filename)
 
-# Enregistrement du DataFrame dans le fichier avec le nom dynamique : 
+# Enregistrement du DataFrame avec un nom dynamique : 
 df.to_csv(output_filepath, index=False)
 
 # Remplissage du fichier de métadonnées : 

@@ -22,15 +22,15 @@ import sys
 import dagshub
 import mlflow
 import mlflow.sklearn
+from mlflow.models import infer_signature
 
+# Connexion avec MLFlow pour le suivi des expérimentations et l'enregistrement du modèle : 
 dagshub.init(
     repo_owner="tiffany.dalmais",
     repo_name="OCT24_MLOPS_CO2",
     mlflow=True
 )
-
 mlflow.autolog()
-
 with mlflow.start_run():
 
     # Importation de la configuration des chemins : 
@@ -38,17 +38,17 @@ with mlflow.start_run():
     import config
 
     # Chargement du nom du fichier à partir du fichier de métadonnées :
-    # Chemin vers le fichier metadata.json depuis le dossier initial : 
+    # Chemin vers le fichier "metadata.json" depuis le dossier initial : 
     metadata_path = os.path.join(config.METADATA_DIR, "metadata.json")
 
-    # Lecture du fichier metadata :
+    # Lecture du fichier "metadata" :
     with open(metadata_path, "r") as f:
         metadata = json.load(f)
 
-    # Récupération du chemin du fichier raw tel qu'enregistré dans metadata : 
+    # Récupération du chemin du fichier "raw" tel qu'enregistré dans "metadata" : 
     processed_data_path = metadata.get("processed_data")
 
-    # Chargement du fichier CSV :
+    # Chargement du fichier .csv :
     df = pd.read_csv(processed_data_path)
 
     # Séparation de X et y :
@@ -63,21 +63,22 @@ with mlflow.start_run():
     X_train_scaled = scaler.transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    # Modèle final: RandomForestRegressor
+    # Modèle final - RandomForestRegressor :
     model_final = RandomForestRegressor(bootstrap=False, max_features=0.75, min_samples_leaf=1,
                                         min_samples_split=9, n_estimators=100, random_state=42)
     model_final.fit(X_train_scaled, y_train)
     results_model_final = model_final.predict(X_test_scaled)
 
-    # Chemin complet vers le fichier metrics.json :
-    metrics_file = os.path.join(config.OUTPUTS_DIR, "metrics.json")
-
-    # Création du dossier et fichier si nécessaire : 
-    if not os.path.exists(metrics_file):
-        os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
-        with open(metrics_file, "w") as f:
-            json.dump({}, f, indent=4)
-
+    # Enregistrement du modèle dans MLFlow : 
+    params = {
+    "bootstrap": False,
+    "max_features": 0.75,
+    "min_samples_leaf": 1,
+    "min_samples_split": 9,
+    "n_estimators": 100,
+    "random_state": 42
+    }
+    signature = infer_signature(X_test_scaled, results_model_final)
 
     # Affichage et enregistrement des metrics : 
     # Import des fonctions créées dans le fichier metrics.py : 
@@ -89,8 +90,31 @@ with mlflow.start_run():
     print(f"R²  : {metrics['r2']:.4f}")
 
     # Enregistrement des metrics : 
+    os.makedirs(config.OUTPUTS_DIR, exist_ok=True)
     metrics_file = os.path.join(config.OUTPUTS_DIR, "metrics.json")
     save_metrics(metrics, metrics_file)
+
+    # Enregistrement des paramètres et metrics : 
+    mlflow.log_params(params)
+    mlflow.log_metric("rmse", metrics["rmse"])
+    mlflow.log_metric("r2", metrics["r2"])
+    
+    # Enregistrement du modèle : 
+    mlflow.sklearn.log_model(
+        sk_model=model_final,
+        artifact_path="sklearn-model",
+        signature=signature,
+        registered_model_name="RF_01",
+    )
+
+    # Chemin complet vers le fichier "metrics.json" :
+    metrics_file = os.path.join(config.OUTPUTS_DIR, "metrics.json")
+
+    # Création du dossier et fichier si nécessaire : 
+    if not os.path.exists(metrics_file):
+        os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
+        with open(metrics_file, "w") as f:
+            json.dump({}, f, indent=4)
 
     # Analyse des erreurs : 
     df_results_final = pd.DataFrame({'y_true': y_test, 'y_pred': results_model_final})
@@ -99,27 +123,27 @@ with mlflow.start_run():
     outliers = df_results_final[df_results_final['error'] > seuil]
     print(outliers.describe())
 
-    # Générer un nom de fichier dynamique pour le modèle :
+    # Génération d'un nom de fichier dynamique pour le modèle :
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     model_filename = f"RandomForest_{timestamp}.pkl"
 
     # Enregistrement du fichier de données prétraitées : 
-    # Définir les chemins vers les dossiers existants :
+    # Définition des chemins vers les dossiers existants :
     models_dir = config.MODELS_DIR
 
-    # Créer les dossiers s'ils n'existent pas :
+    # Création des dossiers s'ils n'existent pas :
     os.makedirs(models_dir, exist_ok=True)
 
-    # Construction du chemin complet vers le fichier dans le dossier models existant :
+    # Construction du chemin complet vers le fichier dans le dossier "models" existant :
     model_path = os.path.join(models_dir, model_filename)
 
     # Enregistrement du modèle entraîné : 
     joblib.dump(model_final, model_path)
 
-    # Chemin complet vers le fichier metadata.json : 
+    # Chemin complet vers le fichier "metadata.json" : 
     metadata_file = os.path.join(config.METADATA_DIR, "metadata.json")
 
-    # Charger le contenu existant de metadata.json s'il existe, sinon initialiser un dictionnaire vide : 
+    # Chargement du contenu de "metadata.json" s'il existe, sinon initialisation d'un dictionnaire vide : 
     if os.path.exists(metadata_file):
         with open(metadata_file, "r") as f:
             metadata = json.load(f)

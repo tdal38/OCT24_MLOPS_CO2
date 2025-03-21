@@ -14,27 +14,26 @@ import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import config
 
-# Chemin vers le fichier metadata.json depuis le dossier initial : 
+# Chemin vers le fichier "metadata.json" depuis le dossier initial : 
 metadata_path = os.path.join(config.METADATA_DIR, "metadata.json")
 
-# Lecture du fichier metadata :
+# Lecture du fichier "metadata" :
 with open(metadata_path, "r") as f:
     metadata = json.load(f)
 
-# Récupération du chemin du fichier raw tel qu'enregistré dans metadata : 
+# Récupération du chemin du fichier "raw" tel qu'enregistré dans "metadata" : 
 raw_data_path = metadata.get("raw_data")
 
-# Chargement du fichier CSV :
+# Chargement du fichier .csv :
 df = pd.read_csv(raw_data_path)
 
 # Suppression des doublons potentiels à travers les années. 
 # On ne prend pas en compte la colonne "Cn" car de nombreuses variations d'orthographe existent pour un même modèle. 
-
 subset_cols = [col for col in df.columns if col not in ['Cn', 'Year']]
 df = df.drop_duplicates(subset=subset_cols)
 
 # Vérification de la colonne "Ft" - Travail de catégorisation nécessaire :
-# Passage en minuscules des catégories en doublon
+# Passage en minuscules des catégories en doublon :
 
 df['Ft'] = df['Ft'].str.lower()
 
@@ -42,8 +41,8 @@ df['Ft'] = df['Ft'].str.lower()
 
 df = df[df['Ft'] != 'unknown']
 
-# Rassemblement des variables
-# NB : Le dictionnaire peut être complété en cas de valeurs différentes dans le dataset utilisé
+# Rassemblement des variables :
+# NB : Le dictionnaire peut être complété en cas de valeurs différentes dans le dataset utilisé : 
 
 dico_fuel = {'petrol': 'Essence',
              'hydrogen' : 'Essence',
@@ -59,7 +58,7 @@ dico_fuel = {'petrol': 'Essence',
 
 df['Ft'] = df['Ft'].replace(dico_fuel)
 
-# Mise de côté des modèles électriques (qui n'émettent pas directement de CO2)
+# Mise de côté des modèles électriques (qui n'émettent pas directement de CO2) :
 
 df = df[df['Ft'] != 'Electrique']
 
@@ -84,7 +83,6 @@ df['Mk'] = df['Mk'].apply(extract_brand)
 
 # Correction des fautes de frappe : 
 dico_marque = {
-    'DS': 'CITROEN',
     'VW': 'VOLKSWAGEN',
     '?KODA': 'SKODA',
     'ŠKODA': 'SKODA',
@@ -151,7 +149,7 @@ def detect_outliers(df, target_col, group_cols=["Cn", "Ft", "Year"]):
 # Liste des colonnes à filtrer successivement :
 columns_to_filter = ['Ewltp (g/km)', 'Fc', 'M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)']
 
-# On part du DataFrame initial (copie pour ne pas altérer l'original) :
+# On part du DataFrame initial (que l'on copie pour ne pas altérer l'original) :
 df_temp = df.copy()
 
 # Boucle sur chaque colonne pour appliquer le filtrage successif des outliers :
@@ -179,7 +177,6 @@ bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns
 df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].astype(int)
 
 # Encodage de "Mk" : 
-
 df_clean_no_outliers_final = pd.get_dummies(df_clean_no_outliers_final, columns=['Mk'], prefix='Mk', drop_first=False)
 bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns
 df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].astype(int)
@@ -189,7 +186,7 @@ df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].as
 processed_dir = config.PROCESSED_DIR
 metadata_dir = config.METADATA_DIR
 
-# Créer les dossiers s'ils n'existent pas :
+# Créer les dossiers s'ils n'existent pas (supprimés par DVC lors d'un nouveau déclenchement):
 os.makedirs(processed_dir, exist_ok=True)
 os.makedirs(metadata_dir, exist_ok=True)
 
@@ -197,16 +194,16 @@ os.makedirs(metadata_dir, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_filename = f"DF_Processed_{timestamp}.csv"
 
-# Construction du chemin complet vers le fichier dans le dossier raw existant : 
+# Construction du chemin complet vers le fichier dans le dossier "raw" existant : 
 output_filepath = os.path.join(processed_dir, output_filename)
 
-# Enregistrement du DataFrame dans le fichier avec le nom dynamique : 
+# Enregistrement du DataFrame avec un nom dynamique : 
 df_clean_no_outliers_final.to_csv(output_filepath, index=False)
 
 # Définition du chemin complet vers le fichier de métadonnées :
 metadata_file = os.path.join(metadata_dir, "metadata.json")
 
-# Chargement du contenu existant du fichier metadata, s'il existe, sinon initialisation d'un dictionnaire vide : 
+# Chargement du contenu existant du fichier "metadata", s'il existe, sinon initialisation d'un dictionnaire vide : 
 if os.path.exists(metadata_file):
     with open(metadata_file, "r") as f:
         metadata = json.load(f)
@@ -216,6 +213,6 @@ else:
 # Ajout ou mise à jour de la clé pour les données prétraitées : 
 metadata["processed_data"] = output_filepath
 
-# Réécriture du fichier metadata avec les deux informations (pour ne pas écraser celles des données brutes) : 
+# Réécriture du fichier "metadata" avec les deux informations (pour ne pas écraser celles des données brutes) : 
 with open(metadata_file, "w") as f:
     json.dump(metadata, f, indent=4)
