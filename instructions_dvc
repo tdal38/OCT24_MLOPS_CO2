@@ -159,7 +159,7 @@ modèles sur les onglets correspondants.
 
     4. Exécution de dvc push (pour transférer les données volumineuses vers DagsHub). 
 
-    5. Consultation de l'interface DagsHub pour suivre l'évolution du pipeline et les résultats des expérimentations.
+    5. Consultation de l'interface DagsHub pour suivre l'évolution de la pipeline et les résultats des expérimentations.
 
 """
 
