@@ -1,0 +1,52 @@
+"""
+Etapes à suivre pour récupérer et exécuter la projet : 
+
+1. Cloner le repository : 
+git clone https://dagshub.com/tiffany.dalmais/OCT24_MLOPS_CO2.git
+
+2. Se placer dans le répertoire cloné : 
+cd OCT24_MLOPS_CO2
+
+3. Installer les dépendances du projet : 
+pip install -r requirements.txt
+
+4. Installer DVC (si ce n'est pas déjà fait) :
+pip install dvc
+
+5. Installer MLflow et dagshub :
+pip install mlflow dagshub
+
+6. Configurer l'authentification (optionnel, pour éviter de ressaisir ses identifiants à chaque fois) : 
+    a. Ouvrir un terminal et créer/modifier le fichier ~/.netrc : 
+    nano ~/.netrc
+
+    b. Ajouter les lignes suivantes au fichier : 
+    machine dagshub.com
+        login nom_utilisateur
+        password token_dagshub
+
+    c. Enregistrer les modifications et quitter l'éditeur de texte : 
+    Ctrl+O, Enter, Ctrl+X
+
+    d. Sécuriser le fichier : 
+    chmod 600 ~/.netrc
+
+7. Récupérer les données versionnées par DVC :
+dvc pull
+
+8. Exécuter la pipeline pour reproduire les étapes : 
+dvc repro
+
+9. Gestion des commits et des push : 
+En cas de modification de la pipeline et/ou des scripts : 
+    a. Ajouter et committer les modifications (code, dvc.yaml, dvc.lock, etc.) :
+    git add .
+    git commit -m "Description du commit"
+
+    b. Pousser le code vers le remote Git : 
+    git push origin main
+
+    c. Pousser les données volumineuses via DVC :
+    dvc push
+
+"""

@@ -1,0 +1,164 @@
+"""
+
+1. Structuration du projet
+
+Afin de garantir une intégration fluide entre les différents services (GitHub / DagsHub + DVC / MLFlow), 
+il est important de partir sur de bonnes bases, avec une architecture de fichiers claire et structurée.
+
+Exemple d'architecture : 
+
+Dossier_Projet/
+├── config.py            # Fichier central de configuration (chemins pour les dossiers et fichiers)
+├── data/
+│   ├── raw/             # Données brutes
+│   └── processed/       # Données prétraitées
+├── metadata/            # Contenant le fichier metadata.json pour faciliter l'interaction entre les scripts et leurs sorties
+├── models/              # Modèles entraînés
+├── outputs/             # Artefacts et métriques (ex: metrics.json)
+├── notebooks/           # Notebooks d'analyse
+└── src/                 # Code source
+    ├── data/            # Scripts de récupération et de prétraitement des données
+    ├── models/          # Script de modélisation
+    └── utils/           # Modules utilitaires (logger, metrics, etc.)
+
+Cette structure a été créée sur une machine locale. Il est ensuite nécessaire de créer un nouveau repository sur DagsHub. 
+L'URL de ce repo sera utilisée pour configurer les connexions entre les services. 
+
+2. Mise en place de DVC pour le versionnement des données et la reproductibilité
+
+    a. Initialisation de dvc à la racine du projet avec la commande suivante : dvc init
+    Cette commande crée le dossier caché .dvc et les fichiers de configuration nécessaires. 
+
+    b. Configuration du remote DVC : 
+    Modification du fichier .dvc/config avec les informations suivantes : 
+
+    [core] 
+    remote = dagshub_remote
+    autostage = true
+
+    [remote "dagshub_remote"]
+    url = https://dagshub.com/nom_utilisateur_dagshub/nom_repo.dvc
+
+    NB : Il est important d'avoir l'extension .dvc à la fin de l'URL afin que tout fonctionne correctement lors de la
+    configuration de DVC (le .git sera utilisé pour la mise en place du remote DagsHub). 
+
+    La configuration peut également se faire dans le fichier config.local. Les informations suivantes peuvent y figurer : 
+
+    ['remote "dagshub_remote"']
+    user = nom_utilisateur_dagshub
+    password = token_dagshub
+
+    Le token doit être généré directement depuis l'interface web de Dagshub (configuration HTTP). Un fichier .netrc peut aussi
+    être utilisé pour gérer les credentials (voir plus bas). 
+
+    c. Définition d'une pipeline dans dvc.yaml :
+    Création du fichier à la racine du dossier et ajout des différentes étapes de la pipeline. Ici : 
+        - recup_raw_data : exécute src/data/recup_raw_data.py pour récupérer les données brutes et les enregistrer dans data/raw.
+        - preprocessing : exécute src/data/preprocessing.py, récupère les données brutes présentes dans data/raw, les traite et 
+        sauvegarde le résultat dans data/processed.
+        - modelisation : exécute src/models/modelisation.py qui entraîne le modèle avec les données prétraitées et génère les 
+        métriques + enregistre le modèle dans models et les métriques dans outputs/metrics.json.
+
+    d. Exécution et mise à jour de la pipeline :
+        - Exécution grâce à la commande dvc repro : lancement de toute la pipeline et génération automatique du fichier 
+        dvc.lock, assurant la reproductibilité. 
+        - Commit et push : envoi des dvc.yaml et dvc.lock via git push + envoi des fichiers volumineux avec dvc push.
+
+3. Gestion des remotes pour l'interaction GitHub / DagsHub : 
+Deux remotes doivent être configurés pour permettre l'interaction entre les deux plateformes. Pour créer un remote avec DVC,
+utiliser les commandes suivantes : 
+
+dvc remote add <nom_remote> <url_remote>
+
+Pour définir ce remote par défaut, utiliser : dvc config core.remote <nom_remote>
+
+Voici un exemple de configuration : 
+
+    - GitHub : 
+    github  https://github.com/nom_utilisateur_GitHub/nom_repo.git (fetch)
+    github  https://github.com/nom_utilisateur_GitHub/nom_repo.git (push)
+
+    - DagsHub : 
+    origin  https://dagshub.com/nom_utilisateur_DagsHub/nom_repo.git (fetch)
+    origin  https://dagshub.com/nom_utilisateur_DagsHub/nom_repo.git (push)
+
+Pour ajouter des options supplémentaires comme des credentials, il est possible d'utiliser : 
+dvc remote modify --local <nom_remote> user <nom_utilisateur>
+dvc remote modify --local <nom_remote> password <token_plateforme>
+
+Il est possible de vérifier les remotes configurées grâce aux commandes git remote -v et dvc remote list. 
+
+En cas de problème d'autorisation lors d'un git push (envoi des fichiers légers vers GitHub), il est possible de : 
+
+    - Modifier l'URL du remote pour inclure le token DagsHub (ce qui peut poser des problèmes de sécurité car cette information
+    pourra être visible dans le code source). 
+
+    - Configurer un fichier ~/.netrc contenant ses identifiants DagsHub. Voici les différentes étapes à suivre : 
+
+        1. Depuis un terminal, utiliser un éditeur de texte comme nano pour créer le fichier : nano ~/.netrc
+        Il sera créé dans le dossier de l'utilisateur de la machine locale. 
+
+        2. Ajouter les informations suivantes et enregistrer les modifications : 
+        machine dagshub.com
+            login nom_utilisateur_dagshub
+            password token_dagshub 
+        Ce fameux token peut être généré depuis le site web de DagsHub. En cliquant sur l'image de votre compte (une fois
+        connecté) en haut à droite -> Your settings -> Tokens -> Copy (ou Regenerate avant de Copy si nécessaire). 
+
+        3. Sauvegarder les modifications et quitter l'éditeur de texte (Ctrl + O, Enter, puis Ctrl + X). 
+
+        4. Sécuriser le fichier pour qu'il ne soit pas accessible à d'autres utilisateurs (changement des permissions) via
+        la commande suivante : 
+        chmod 600 ~/.netrc
+
+Une fois créé, le fichier .netrc est utilisé pour s'authentifier automatiquement sans demander de saisir des identifiants 
+à chaque opération. Il fonctionne en arrière-plan, sans intervention supplémentaire de la part de l'utilisateur, dès qu'un
+service en a besoin (ex : lors d'un git push). 
+
+4. Intégration de MLflow pour le suivi des expérimentations :
+
+    a. Installation et initialisation :
+    Installation de MLFlow et du package dagshub : pip install dagshub mlflow
+
+    b. Modification du script de modélisation (modelisation.py) afin d'intégrer le suivi MLFlow : 
+
+        - Initialisation : 
+        dagshub.init(repo_owner="nom_utilisateur_dagshub", repo_name="nom_repo", mlflow=True)
+        = configuration automatique du tracking URI permettant aux logs MLflow d'être envoyés à DagsHub.
+
+        - Activation de l'autolog :
+        mlflow.autolog() 
+        = enregistrement automatique des paramètres, métriques et artefacts.
+
+        - Log des métriques et du modèle : Script encapsulé via with mlflow.start_run(): + utilisation de 
+        mlflow.log_params(), mlflow.log_metrics(), et mlflow.sklearn.log_model() pour enregistrer le modèle et ses résultats.
+
+Grâce à cette configuration, il est possible, une fois les runs effectués et poussés, de visualiser les expérimentations 
+directement depuis l'onglet MLflow du repository DagsHub. Il est également possible de les visualiser via l'interface locale de 
+MLFLow (accessible par défaut sur http://127.0.0.1:5000). 
+
+En conclusion, chaque outil joue un rôle spécifique :
+    - Git versionne le code et les fichiers de configuration.
+    - DVC gère le suivi des données et la reproductibilité du pipeline.
+    - MLflow permet de suivre les expérimentations, les paramètres, les métriques et les modèles.
+
+À chaque modification, le cycle complet doit se dérouler ainsi (dans cet ordre précis) :
+
+    1. Modification du code ou des données (sauvegarde des fichiers nécessaire). 
+
+    2. Exécution de la commande dvc repro (pour mettre à jour la pipeline et générer dvc.lock).
+    Si des changements ont été réalisés, une nouvelle exécution des scripts aura lieu. 
+    Le modèle sera automatiquement suivi par MLFlow si la configuration nécessaire a été effectuée correctement. 
+
+    3. Commit et push Git (incluant dvc.yaml, dvc.lock et le code) via les commandes suivantes : 
+        git add .
+        git commit -m "Description du commit"
+        git push origin main (ou autre nom de la branche utilisée)
+
+    4. Exécution de dvc push (pour transférer les données volumineuses vers DagsHub). 
+
+    5. Consultation de l'interface DagsHub pour suivre l'évolution du pipeline et les résultats des expérimentations.
+
+"""
+
+
