@@ -64,10 +64,10 @@ df, X_train, X_test, y_train, y_test = load_and_preprocess_data()
 mlflow.set_experiment("MLflow Streamlit")
 
 # Définir les onglets
-tabs = ["Exploration du Dataset", "Entraînement des Modèles", "Historique des Runs", "Chargement des Modèles"]
+tabs = ["Exploration du Dataset", "Entraînement des Modèles", "Historique des Runs", "Chargement des Modèles", "Utilisateur Final"]
 
 # Création des onglets
-tab1, tab2, tab3, tab4 = st.tabs(tabs)
+tab1, tab2, tab3, tab4, tab5 = st.tabs(tabs)
 
 # Onglet 1 : Exploration du dataset
 with tab1:
@@ -226,3 +226,7 @@ with tab4:
         if submitted:
             prediction = loaded_model.predict(input_data_df)
             st.success(f"📊 **Prédiction des émissions de CO₂ : {prediction[0]:.2f} g/km**")
+
+# Onglet 5 : Utilisateur final
+
+# Partie de Magali

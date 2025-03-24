@@ -1,31 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Importation des librairies spécifiques à l'enregistrement du fichier final : 
+# Importation des librairies :
 import os
-import json
-from datetime import datetime
 import sys
-
-# Importation des librairies classiques :
 import pandas as pd
 
 # Importation de la configuration des chemins : 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import config
 
-# Chemin vers le fichier "metadata.json" depuis le dossier initial : 
-metadata_path = os.path.join(config.METADATA_DIR, "metadata.json")
-
-# Lecture du fichier "metadata" :
-with open(metadata_path, "r") as f:
-    metadata = json.load(f)
-
-# Récupération du chemin du fichier "raw" tel qu'enregistré dans "metadata" : 
-raw_data_path = metadata.get("raw_data")
-
 # Chargement du fichier .csv :
-df = pd.read_csv(raw_data_path)
+raw_file_path = os.path.join(config.RAW_DIR, "DF_Raw.csv")
+df = pd.read_csv(raw_file_path)
 
 # Suppression des doublons potentiels à travers les années. 
 # On ne prend pas en compte la colonne "Cn" car de nombreuses variations d'orthographe existent pour un même modèle. 
@@ -182,37 +169,17 @@ bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns
 df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].astype(int)
 
 # Enregistrement du fichier de données prétraitées : 
-# Définir les chemins vers les dossiers existants :
+# Définir le chemin vers le dossier existant :
 processed_dir = config.PROCESSED_DIR
-metadata_dir = config.METADATA_DIR
 
-# Créer les dossiers s'ils n'existent pas (supprimés par DVC lors d'un nouveau déclenchement):
+# Création du dossier s'il n'existe pas (supprimé par DVC lors d'un nouveau déclenchement):
 os.makedirs(processed_dir, exist_ok=True)
-os.makedirs(metadata_dir, exist_ok=True)
 
-# Génération d'un timestamp au format YYYYMMDD_HHMMSS :
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_filename = f"DF_Processed_{timestamp}.csv"
+# Création de la variable contenant le nom du fichier .csv à exporter : 
+output_filename = "DF_Processed.csv"
 
-# Construction du chemin complet vers le fichier dans le dossier "raw" existant : 
+# Construction du chemin complet vers le fichier dans le dossier "processed" existant : 
 output_filepath = os.path.join(processed_dir, output_filename)
 
-# Enregistrement du DataFrame avec un nom dynamique : 
+# Exportation du DataFrame en .csv : 
 df_clean_no_outliers_final.to_csv(output_filepath, index=False)
-
-# Définition du chemin complet vers le fichier de métadonnées :
-metadata_file = os.path.join(metadata_dir, "metadata.json")
-
-# Chargement du contenu existant du fichier "metadata", s'il existe, sinon initialisation d'un dictionnaire vide : 
-if os.path.exists(metadata_file):
-    with open(metadata_file, "r") as f:
-        metadata = json.load(f)
-else:
-    metadata = {}
-
-# Ajout ou mise à jour de la clé pour les données prétraitées : 
-metadata["processed_data"] = output_filepath
-
-# Réécriture du fichier "metadata" avec les deux informations (pour ne pas écraser celles des données brutes) : 
-with open(metadata_file, "w") as f:
-    json.dump(metadata, f, indent=4)

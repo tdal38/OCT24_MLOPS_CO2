@@ -1,5 +1,5 @@
 {
-    "raw_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/raw/DF_Raw_20250321_095913.csv",
-    "processed_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/processed/DF_Processed_20250321_174334.csv",
-    "trained_model": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_20250321_100143.pkl"
+    "raw_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/raw/DF_Raw_20250324_100947.csv",
+    "processed_data": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/processed/DF_Processed_20250324_100950.csv",
+    "trained_model": "/Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_20250324_101155.pkl"
 }

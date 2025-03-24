@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Importation des librairies pour la requête SQL et l'enregistrement du fichier final :
+# Importation des librairies :
 import requests
 import urllib.parse
-
-# Importation des librairies classiques :
 import pandas as pd
-
-# Importation des librairies spécifiques à l'enregistrement du fichier final : 
 import os
-import json
-from datetime import datetime
 import sys
 
 # Importation de la configuration des chemins : 
@@ -64,26 +58,18 @@ for table in table_list:
 # Transformation en DataFrame :
 df = pd.DataFrame(records)
 
-# Définir les chemins vers les dossiers existants :
+# Enregistrement du fichier :
+# Définition du chemins vers le dossier "raw" (pour exporter la base de données brute) :
 raw_dir = config.RAW_DIR
-metadata_dir = config.METADATA_DIR
 
-# Créer les dossiers s'ils n'existent pas :
+# Création du dossier s'il n'existe pas :
 os.makedirs(raw_dir, exist_ok=True)
-os.makedirs(metadata_dir, exist_ok=True)
 
-# Génération d'un timestamp au format YYYYMMDD_HHMMSS :
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_filename = f"DF_Raw_{timestamp}.csv"
+# Création de la variable contenant le nom du fichier .csv à exporter : 
+output_filename = "DF_Raw.csv"
 
 # Construction du chemin complet vers le fichier dans le dossier "raw" existant : 
 output_filepath = os.path.join(raw_dir, output_filename)
 
-# Enregistrement du DataFrame avec un nom dynamique : 
+# Exportation du DataFrame en .csv : 
 df.to_csv(output_filepath, index=False)
-
-# Remplissage du fichier de métadonnées : 
-metadata_file = os.path.join(metadata_dir, "metadata.json")
-metadata = {"raw_data": output_filepath}
-with open(metadata_file, "w") as f:
-    json.dump(metadata, f)
