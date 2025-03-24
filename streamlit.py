@@ -10,13 +10,13 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
 
+import dagshub
 import mlflow
+import mlflow.sklearn
 from mlflow.models import infer_signature
 
 import os
-import json
 import config
-import dagshub
 
 # Initialisation de DagsHub pour suivre les expérimentations et les modèles : 
 
@@ -26,24 +26,15 @@ dagshub.init(
     mlflow=True
 )
 
+# Activation de l'autologging pour scikit-learn :
+mlflow.autolog()
+
 # Fonction pour charger et prétraiter le dataset
 @st.cache_data
 def load_and_preprocess_data():
     # Chargement du dataset :
-
-    # Chargement du nom du fichier à partir du fichier de métadonnées :
-    # Chemin vers le fichier "metadata.json" depuis le dossier initial : 
-    metadata_path = os.path.join(config.METADATA_DIR, "metadata.json")
-
-    # Lecture du fichier "metadata" :
-    with open(metadata_path, "r") as f:
-        metadata = json.load(f)
-
-    # Récupération du chemin du fichier "raw" tel qu'enregistré dans "metadata" : 
-    processed_data_path = metadata.get("processed_data")
-
-    # Chargement du fichier .csv :
-    df = pd.read_csv(processed_data_path)
+    processed_file_path = os.path.join(config.PROCESSED_DIR, "DF_Processed.csv")
+    df = pd.read_csv(processed_file_path)
     
     # Sélection des features (X) et de la target (y) : 
     baseline_features = ['M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc', 'Ft_Diesel', 'Ft_Essence']
@@ -113,10 +104,6 @@ with tab2:
             # Calcul des métriques
             r2 = r2_score(y_test, y_pred)
             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-
-            # Log dans MLflow
-            mlflow.log_metric("R2", r2)
-            mlflow.log_metric("RMSE", rmse)
 
             # Ajouter un tag d'info
             mlflow.set_tag("Training Info", f"Modèle {model_choice} entraîné sur DF2023")
