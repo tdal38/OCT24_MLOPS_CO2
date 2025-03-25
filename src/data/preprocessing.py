@@ -32,15 +32,15 @@ df = df[df['Ft'] != 'unknown']
 # NB : Le dictionnaire peut être complété en cas de valeurs différentes dans le dataset utilisé : 
 
 dico_fuel = {'petrol': 'Essence',
-             'hydrogen' : 'Essence',
-             'e85': 'Essence',
-             'lpg': 'Essence',
-             'ng': 'Essence',
-             'ng-biomethane' : 'Essence',
-             'diesel': 'Diesel',
-             'petrol/electric': 'Hybride',
-             'diesel/electric': 'Hybride',
-             'electric' : 'Electrique'
+            'hydrogen': 'Hydrogene',
+            'e85': 'Essence',
+            'lpg': 'GPL',
+            'ng': 'GPL',
+            'ng-biomethane': 'Bio-Carburant',
+            'diesel': 'Diesel',
+            'petrol/electric': 'Hybride',
+            'diesel/electric': 'Hybride',
+            'electric': 'Electrique'
 }
 
 df['Ft'] = df['Ft'].replace(dico_fuel)
@@ -155,9 +155,9 @@ df_clean_no_outliers_final = df_clean_no_outliers_final[['Mk', 'Cn', 'M (kg)', '
 
 # Mise de côté des modèles hybrides trop peu représentés : 
 df_clean_no_outliers_final = df_clean_no_outliers_final[df_clean_no_outliers_final['Ft'] != 'Hybride']
+df_clean_no_outliers_final = df_clean_no_outliers_final[df_clean_no_outliers_final['Ft'] != 'Bio-Carburant']
 
 # Encodage des variables catégorielles :
-
 # Encodage de "Ft" :
 df_clean_no_outliers_final = pd.get_dummies(df_clean_no_outliers_final, columns=['Ft'], prefix='Ft', drop_first=False)
 bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns

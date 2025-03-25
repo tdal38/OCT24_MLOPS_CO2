@@ -37,7 +37,7 @@ def load_and_preprocess_data():
     df = pd.read_csv(processed_file_path)
     
     # Sélection des features (X) et de la target (y) : 
-    baseline_features = ['M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc', 'Ft_Diesel', 'Ft_Essence']
+    baseline_features = ['M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc', 'Ft_Diesel', 'Ft_Essence', 'Ft_GPL']
     target = 'Ewltp (g/km)'
 
     X_baseline = df[baseline_features]
@@ -106,7 +106,7 @@ with tab2:
             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 
             # Ajouter un tag d'info
-            mlflow.set_tag("Training Info", f"Modèle {model_choice} entraîné sur DF2023")
+            mlflow.set_tag("Training Info", f"Modèle {model_choice} entraîné sur le dataset")
 
             # Enregistrer le modèle MLflow
             signature = infer_signature(X_train, model.predict(X_train))
@@ -187,16 +187,21 @@ with tab4:
                 ec_cm3 = st.number_input("Cylindrée (cm³)", min_value=500, max_value=6000, step=1)
             with col2:
                 ep_kw = st.number_input("Puissance (kW)", min_value=20, max_value=500, step=1)
-                erwltp = st.number_input("Réduction d'émissions WLTP (g/km)", min_value=0.0, max_value=3.5, step=0.01)
+                erwltp = st.number_input("Réduction d'émissions WLTP (g/km)", min_value=0.0, max_value=5, step=0.01)
 
             fuel_consumption = st.number_input("Consommation de carburant (L/100km)", min_value=2.0, max_value=15.0, step=0.1)
-            ft = st.selectbox("Type de carburant", ["Diesel", "Essence"])
-            fuel_types = {"Diesel": [1, 0], "Essence": [0, 1]}
+            ft = st.selectbox("Type de carburant", ["Diesel", "Essence", "GPL"])
+            fuel_types = {
+            "Diesel": [1, 0, 0],
+            "Essence": [0, 1, 0],
+            "GPL": [0, 0, 1],
+            }
             ft_encoded = fuel_types[ft]
 
             # Construction de l'input (features utilisées lors de l'entraînement)
             input_values = [m_kg, ec_cm3, ep_kw, erwltp, fuel_consumption] + ft_encoded
-            input_data_df = pd.DataFrame([input_values], columns=['M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc', 'Ft_Diesel', 'Ft_Essence'])
+            input_data_df = pd.DataFrame([input_values], columns=['M (kg)', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc', 'Ft_Diesel', 'Ft_Essence',
+                                                                  'Ft_GPL'])
             input_data_df = input_data_df.astype({
                 "M (kg)": int,
                 "Ec (cm3)": int,
@@ -204,7 +209,8 @@ with tab4:
                 "Erwltp (g/km)": float,
                 "Fc": float,
                 "Ft_Diesel": int,
-                "Ft_Essence": int
+                "Ft_Essence": int,
+                "Ft_GPL": int,
                 })
 
             submitted = st.form_submit_button("🔎 Prédire")
