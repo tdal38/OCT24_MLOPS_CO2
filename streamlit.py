@@ -139,7 +139,7 @@ with tab3:
         st.info("Aucun modèle enregistré pour l'instant. Lance un entraînement !")
     else:
         # Extraire les informations clefs des runs
-        df_runs = runs[["run_id", "metrics.R2", "metrics.RMSE", "start_time", "tags.mlflow.runName"]]
+        df_runs = runs[["run_id", "metrics.training_r2_score", "metrics.training_root_mean_squared_error", "start_time", "tags.mlflow.runName"]]
         df_runs.columns = ["Run ID", "R² Score", "RMSE", "Date", "Nom du modèle"]
 
         # Sélectionner la dernière run par défaut
@@ -187,7 +187,7 @@ with tab4:
                 ec_cm3 = st.number_input("Cylindrée (cm³)", min_value=500, max_value=6000, step=1)
             with col2:
                 ep_kw = st.number_input("Puissance (kW)", min_value=20, max_value=500, step=1)
-                erwltp = st.number_input("Réduction d'émissions WLTP (g/km)", min_value=0.0, max_value=5, step=0.01)
+                erwltp = st.number_input("Réduction d'émissions WLTP (g/km)", min_value=0.0, max_value=5.0, step=0.01)
 
             fuel_consumption = st.number_input("Consommation de carburant (L/100km)", min_value=2.0, max_value=15.0, step=0.1)
             ft = st.selectbox("Type de carburant", ["Diesel", "Essence", "GPL"])

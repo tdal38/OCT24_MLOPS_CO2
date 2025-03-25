@@ -6,27 +6,59 @@ import os
 import sys
 import pandas as pd
 
+# Importation de la librairie permettant la sauvegarde des fichiers de log : 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from logging_script import setup_logging
+
 # Importation de la configuration des chemins : 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import config
 
+# Initialisation du logger : 
+logger = setup_logging()
+
+# Démarrage des logs :
+logger.info("✅ Script de preprocessing démarré avec succès (preprocessing.py).")
+
 # Chargement du fichier .csv :
 raw_file_path = os.path.join(config.RAW_DIR, "DF_Raw.csv")
-df = pd.read_csv(raw_file_path)
+
+if not os.path.exists(raw_file_path):
+    logger.error(f"❌ Le fichier {raw_file_path} n'existe pas.")
+else:
+    try:
+        df = pd.read_csv(raw_file_path)
+        logger.info(f"⚙️ Fichier .csv chargé avec succès : ({len(df)} lignes).")
+    except Exception as e:
+        logger.error(f"❌ Erreur lors du chargement du fichier .csv : {e}.")
+
+# Vérification de la présence des colonnes nécessaires
+    required_columns = ['Year', 'Mk', 'Cn', 'M (kg)', 'Ewltp (g/km)', 'Ft', 'Ec (cm3)', 'Ep (KW)', 'Erwltp (g/km)', 'Fc']
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        logger.error(f"❌ Colonne(s) manquante(s) dans le fichier .csv : {missing_columns}")
+    else:
+        logger.info("✅ Toutes les colonnes nécessaires sont présentes.")
 
 # Suppression des doublons potentiels à travers les années. 
 # On ne prend pas en compte la colonne "Cn" car de nombreuses variations d'orthographe existent pour un même modèle. 
 subset_cols = [col for col in df.columns if col not in ['Cn', 'Year']]
+initial_count = len(df)
 df = df.drop_duplicates(subset=subset_cols)
+logger.info(f"🔍 Suppression des doublons - Lignes restantes : {len(df)} (initialement {initial_count}).")
 
 # Vérification de la colonne "Ft" - Travail de catégorisation nécessaire :
 # Passage en minuscules des catégories en doublon :
 
-df['Ft'] = df['Ft'].str.lower()
+if 'Ft' in df.columns:
+    df['Ft'] = df['Ft'].str.lower()
 
 # Suppression des lignes contenant un "unknown" (majoritairement composées de NaN) : 
 
-df = df[df['Ft'] != 'unknown']
+    df = df[df['Ft'] != 'unknown']
+    logger.info("🎯 Transformation de 'Ft' terminée - Suppression des 'unknown'.")
+else:
+    logger.warning("⚠️ Colonne 'Ft' absente, transformation non effectuée.")
 
 # Rassemblement des variables :
 # NB : Le dictionnaire peut être complété en cas de valeurs différentes dans le dataset utilisé : 
@@ -44,13 +76,18 @@ dico_fuel = {'petrol': 'Essence',
 }
 
 df['Ft'] = df['Ft'].replace(dico_fuel)
+logger.info("🔄 Remplacement des valeurs spécifiques de 'Ft' terminé.")
 
 # Mise de côté des modèles électriques (qui n'émettent pas directement de CO2) :
 
 df = df[df['Ft'] != 'Electrique']
 
 # Passage en majuscules de la colonne "Mk" : 
-df['Mk'] = df['Mk'].str.upper()
+if 'Mk' in df.columns:
+    df['Mk'] = df['Mk'].str.upper()
+    logger.info("📝 Les marques ont été converties en majuscules.")
+else:
+    logger.warning("⚠️ Colonne 'Mk' absente, transformation non effectuée.")
 
 # Liste des marques les plus répandues en Europe : 
 target_brands = ['CITROEN', 'FORD', 'FIAT', 'RENAULT', 'MERCEDES', 'BMW', 'VOLKSWAGEN', 'ALPINE', 
@@ -79,6 +116,7 @@ dico_marque = {
     'LANDROVER': 'LAND ROVER'
 }
 df['Mk'] = df['Mk'].replace(dico_marque)
+logger.info("📝 Correction des marques terminée.")
 
 # Suppression des marques trop peu connues : 
 
@@ -86,6 +124,7 @@ brands_to_delete = ['TRIPOD', 'API CZ', 'MOTO STAR', 'REMOLQUES RAMIREZ', 'AIR-B
                     'SIN MARCA', 'WAVECAMPER', 'CASELANI', 'PANDA']
 df = df[~df['Mk'].isin(brands_to_delete)]
 print(df[df['Mk'].isin(brands_to_delete)])
+logger.info("📝 Suppression des marques peu connues.")
 
 # Suppression des occurences trop faibles : 
 
@@ -97,6 +136,7 @@ def filter_brands(df, col='Mk', threshold=5):
 
 filtered_brands = filter_brands(df, col='Mk', threshold=5)
 df = df[df['Mk'].isin(filtered_brands)]
+logger.info("📝 Suppression des occurences trop faibles.")
 
 # Création d'une fonction pour détecter les valeurs aberrantes dans chaque colonne :
 
@@ -125,11 +165,11 @@ def detect_outliers(df, target_col, group_cols=["Cn", "Ft", "Year"]):
 
     # Affichage du nombre d'outliers :
     nb_outliers = len(df_merged[df_merged[diff_col] >= seuil])
-    print(f'Nombre de lignes dont la valeur de "{target_col}" dépasse le seuil de {seuil}: {nb_outliers}')
+    logger.info(f'📌 Nombre de lignes dont la valeur de "{target_col}" dépasse le seuil de {seuil} : {nb_outliers}.')
     
     # Suppression des lignes présentant des outliers :
     df_clean_no_outliers = df_merged[df_merged[diff_col] <= seuil]
-    print(f"Nombre de lignes après suppression des outliers : {len(df_clean_no_outliers)}")
+    logger.info(f"🔄 Nombre de lignes après suppression des outliers : {len(df_clean_no_outliers)}.")
     
     return df_clean_no_outliers
 
@@ -141,10 +181,9 @@ df_temp = df.copy()
 
 # Boucle sur chaque colonne pour appliquer le filtrage successif des outliers :
 for col in columns_to_filter:
-    print(col)
     df_temp = detect_outliers(df_temp, col)
 
-print("\nAprès filtrage successif, le nombre de lignes restantes est de :", len(df_temp))
+logger.info(f"✅ Après filtrage successif, le nombre de lignes restantes est de : {len(df_temp)}.")
 
 # Suppression des valeurs aberrantes après traitement :
 df_clean_no_outliers_final = df_temp
@@ -156,24 +195,31 @@ df_clean_no_outliers_final = df_clean_no_outliers_final[['Mk', 'Cn', 'M (kg)', '
 # Mise de côté des modèles hybrides trop peu représentés : 
 df_clean_no_outliers_final = df_clean_no_outliers_final[df_clean_no_outliers_final['Ft'] != 'Hybride']
 df_clean_no_outliers_final = df_clean_no_outliers_final[df_clean_no_outliers_final['Ft'] != 'Bio-Carburant']
+logger.info("🔄 Mise de côté des valeurs de 'Ft' trop peu représentées terminée.")
 
 # Encodage des variables catégorielles :
 # Encodage de "Ft" :
 df_clean_no_outliers_final = pd.get_dummies(df_clean_no_outliers_final, columns=['Ft'], prefix='Ft', drop_first=False)
 bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns
 df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].astype(int)
+logger.info("✅ Encodage de la variable 'Ft' terminée.")
 
 # Encodage de "Mk" : 
 df_clean_no_outliers_final = pd.get_dummies(df_clean_no_outliers_final, columns=['Mk'], prefix='Mk', drop_first=False)
 bool_cols = df_clean_no_outliers_final.select_dtypes(include=['bool']).columns
 df_clean_no_outliers_final[bool_cols] = df_clean_no_outliers_final[bool_cols].astype(int)
+logger.info("✅ Encodage de la variable 'Mk' terminée.")
 
 # Enregistrement du fichier de données prétraitées : 
 # Définir le chemin vers le dossier existant :
 processed_dir = config.PROCESSED_DIR
 
-# Création du dossier s'il n'existe pas (supprimé par DVC lors d'un nouveau déclenchement):
-os.makedirs(processed_dir, exist_ok=True)
+# Création du dossier s'il n'existe pas :
+try:
+    os.makedirs(processed_dir, exist_ok=True)
+    logger.info("🗂️ Dossier de sauvegarde des données prétraitées vérifié ou créé avec succès.")
+except Exception as e:
+    logger.error(f'❌ Erreur lors de la création du dossier "processed" : {e}')
 
 # Création de la variable contenant le nom du fichier .csv à exporter : 
 output_filename = "DF_Processed.csv"
@@ -182,4 +228,11 @@ output_filename = "DF_Processed.csv"
 output_filepath = os.path.join(processed_dir, output_filename)
 
 # Exportation du DataFrame en .csv : 
-df_clean_no_outliers_final.to_csv(output_filepath, index=False)
+if not df_clean_no_outliers_final.empty:
+    try:
+        df_clean_no_outliers_final.to_csv(output_filepath, index=False)
+        logger.info(f"📁 Fichier .csv enregistré avec succès : {output_filepath}")
+    except Exception as e:
+        logger.error(f"❌ Erreur lors de l'enregistrement du fichier .csv : {e}")
+else:
+    logger.error("❌ Le DataFrame est vide. Aucune sauvegarde n'a été effectuée.")
