@@ -116,7 +116,7 @@ with mlflow.start_run():
         signature=signature,
         registered_model_name="RandomForest_Final",
     )
-    logger.info("✅ Modèle sauvegardé sur MLFlow.")
+    logger.info("📁 Modèle sauvegardé sur MLFlow.")
 
     # Analyse des erreurs : 
     df_results_final = pd.DataFrame({'y_true': y_test, 'y_pred': results_model_final})
@@ -135,9 +135,15 @@ with mlflow.start_run():
     # Création du dossier s'il n'existe pas :
     os.makedirs(models_dir, exist_ok=True)
 
+    try:
+        os.makedirs(models_dir, exist_ok=True)
+        logger.info("🗂️ Dossier de sauvegarde du modèle vérifié ou créé avec succès.")
+    except Exception as e:
+        logger.error(f'❌ Erreur lors de la création du dossier "models" : {e}.')
+
     # Construction du chemin complet vers le fichier dans le dossier "models" existant :
     model_path = os.path.join(models_dir, model_filename)
 
     # Enregistrement du modèle entraîné : 
     joblib.dump(model_final, model_path)
-    logger.info(f"✅ Modèle sauvegardé localement : {model_path}.")
+    logger.info(f"📁 Modèle sauvegardé localement : {model_path}.")
