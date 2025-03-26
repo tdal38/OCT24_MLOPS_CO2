@@ -18,14 +18,6 @@ from mlflow.models import infer_signature
 import os
 import config
 
-# Initialisation de DagsHub pour suivre les expérimentations et les modèles : 
-
-dagshub.init(
-    repo_owner="tiffany.dalmais",
-    repo_name="OCT24_MLOPS_CO2",
-    mlflow=True
-)
-
 # Activation de l'autologging pour scikit-learn :
 mlflow.autolog()
 
