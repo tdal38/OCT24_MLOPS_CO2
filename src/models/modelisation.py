@@ -147,3 +147,10 @@ with mlflow.start_run():
     # Enregistrement du modèle entraîné : 
     joblib.dump(model_final, model_path)
     logger.info(f"📁 Modèle sauvegardé localement : {model_path}.")
+
+    # Enregistrement des variables utilisées pour l'entraînement du modèle : 
+    features_filename = "columns_list.pkl"
+    feature_path = os.path.join(models_dir, features_filename)
+    columns_list = X.columns.tolist()
+    joblib.dump(columns_list, feature_path)
+    logger.info("📁 Le fichier 'columns_list.pkl' a été généré avec succès !")
