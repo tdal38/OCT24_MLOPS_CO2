@@ -161,7 +161,7 @@ En cas de modification de la pipeline et/ou des scripts :
         git add .
         git commit -m "Description du commit"
 
-    b. Pousser le code vers le remote Git :
+    b. Pousser le code vers les remotes Git (DagsHub et GitHub) :
     
         git push origin main
         git push github main

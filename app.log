@@ -364,3 +364,151 @@ max    326.000000  255.050845  111.634321
 2025-03-26 14:39:12,482 - INFO - 🗂️ Dossier de sauvegarde du modèle vérifié ou créé avec succès.
 2025-03-26 14:39:12,720 - INFO - 📁 Modèle sauvegardé localement : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_Final.pkl.
 2025-03-26 14:39:12,720 - INFO - 📁 Le fichier 'columns_list.pkl' a été généré avec succès !
+2025-03-27 09:53:31,587 - INFO - ✅ Script de téléchargement des données démarré avec succès (recup_raw_data.py).
+2025-03-27 09:53:31,588 - INFO - 📥 Début de téléchargement pour la table : co2cars_2021Pv23
+2025-03-27 09:53:31,588 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:35,661 - INFO - ✅ Page 1 téléchargée - 81849 enregistrements récupérés.
+2025-03-27 09:53:35,661 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:36,182 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2021Pv23 (page 2).
+2025-03-27 09:53:36,182 - INFO - 📥 Début de téléchargement pour la table : co2cars_2022Pv25
+2025-03-27 09:53:36,183 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:40,519 - INFO - ✅ Page 1 téléchargée - 100000 enregistrements récupérés.
+2025-03-27 09:53:40,519 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:41,888 - INFO - ✅ Page 2 téléchargée - 18484 enregistrements récupérés.
+2025-03-27 09:53:41,888 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:42,732 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2022Pv25 (page 3).
+2025-03-27 09:53:42,732 - INFO - 📥 Début de téléchargement pour la table : co2cars_2023Pv27
+2025-03-27 09:53:42,733 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:45,398 - INFO - ✅ Page 1 téléchargée - 100000 enregistrements récupérés.
+2025-03-27 09:53:45,398 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:46,503 - INFO - ✅ Page 2 téléchargée - 329 enregistrements récupérés.
+2025-03-27 09:53:46,503 - INFO - 🌐 Requête envoyée.
+2025-03-27 09:53:47,502 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2023Pv27 (page 3).
+2025-03-27 09:53:47,937 - INFO - ✅ DataFrame créé avec succès - 300662 lignes téléchargées.
+2025-03-27 09:53:47,937 - INFO - 🗂️ Dossier de sauvegarde des données brutes vérifié ou créé avec succès.
+2025-03-27 09:53:48,437 - INFO - 📁 Fichier .csv enregistré avec succès : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/raw/DF_Raw.csv
+2025-03-27 09:53:48,999 - INFO - ✅ Script de preprocessing démarré avec succès (preprocessing.py).
+2025-03-27 09:53:49,109 - INFO - ⚙️ Fichier .csv chargé avec succès : (300662 lignes).
+2025-03-27 09:53:49,111 - INFO - ✅ Toutes les colonnes nécessaires sont présentes.
+2025-03-27 09:53:49,151 - INFO - 🔍 Suppression des doublons - Lignes restantes : 251397 (initialement 300662).
+2025-03-27 09:53:49,178 - INFO - 🎯 Transformation de 'Ft' terminée - Suppression des 'unknown'.
+2025-03-27 09:53:49,237 - INFO - 🔄 Remplacement des valeurs spécifiques de 'Ft' terminé.
+2025-03-27 09:53:49,276 - INFO - 📝 Les marques ont été converties en majuscules.
+2025-03-27 09:53:49,422 - INFO - 📝 Correction des marques terminée.
+2025-03-27 09:53:49,442 - INFO - 📝 Suppression des marques peu connues.
+2025-03-27 09:53:49,534 - INFO - 📝 Suppression des occurences trop faibles.
+2025-03-27 09:53:49,636 - INFO - 📌 Nombre de lignes dont la valeur de "Ewltp (g/km)" dépasse le seuil de 22.6 : 11633.
+2025-03-27 09:53:49,645 - INFO - 🔄 Nombre de lignes après suppression des outliers : 239749.
+2025-03-27 09:53:49,719 - INFO - 📌 Nombre de lignes dont la valeur de "Fc" dépasse le seuil de 1.1 : 9014.
+2025-03-27 09:53:49,732 - INFO - 🔄 Nombre de lignes après suppression des outliers : 230735.
+2025-03-27 09:53:49,801 - INFO - 📌 Nombre de lignes dont la valeur de "M (kg)" dépasse le seuil de 117.2 : 9483.
+2025-03-27 09:53:49,808 - INFO - 🔄 Nombre de lignes après suppression des outliers : 221252.
+2025-03-27 09:53:49,888 - INFO - 📌 Nombre de lignes dont la valeur de "Ec (cm3)" dépasse le seuil de 93.1 : 39988.
+2025-03-27 09:53:49,896 - INFO - 🔄 Nombre de lignes après suppression des outliers : 181264.
+2025-03-27 09:53:49,953 - INFO - 📌 Nombre de lignes dont la valeur de "Ep (KW)" dépasse le seuil de 29.9 : 5280.
+2025-03-27 09:53:49,963 - INFO - 🔄 Nombre de lignes après suppression des outliers : 175984.
+2025-03-27 09:53:50,015 - INFO - 📌 Nombre de lignes dont la valeur de "Erwltp (g/km)" dépasse le seuil de 0.8 : 3443.
+2025-03-27 09:53:50,022 - INFO - 🔄 Nombre de lignes après suppression des outliers : 172545.
+2025-03-27 09:53:50,028 - INFO - ✅ Après filtrage successif, le nombre de lignes restantes est de : 172545.
+2025-03-27 09:53:50,056 - INFO - 🔄 Mise de côté des valeurs de 'Ft' trop peu représentées terminée.
+2025-03-27 09:53:50,073 - INFO - ✅ Encodage de la variable 'Ft' terminée.
+2025-03-27 09:53:50,113 - INFO - ✅ Encodage de la variable 'Mk' terminée.
+2025-03-27 09:53:50,114 - INFO - 🗂️ Dossier de sauvegarde des données prétraitées vérifié ou créé avec succès.
+2025-03-27 09:53:51,050 - INFO - 📁 Fichier .csv enregistré avec succès : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/processed/DF_Processed.csv
+2025-03-27 09:53:55,915 - INFO - ✅ Entraînement du modèle démarré avec succès (modelisation.py).
+2025-03-27 09:53:56,156 - INFO - ⚙️ Fichier .csv chargé avec succès : (172383 lignes).
+2025-03-27 09:53:56,169 - INFO - ✅ Séparation de X et y réussie.
+2025-03-27 09:53:56,194 - INFO - ✅ Split train/test effectué.
+2025-03-27 09:53:56,252 - INFO - ✅ Données normalisées avec StandardScaler.
+2025-03-27 09:55:09,732 - INFO - ✅ Modèle RandomForest entraîné avec succès.
+2025-03-27 09:55:10,992 - INFO - 📊 RMSE: 2.4174 | R²: 0.9953
+2025-03-27 09:55:10,993 - INFO - ✅ Fichier des métriques enregistré : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/outputs/metrics.json.
+2025-03-27 09:55:11,572 - INFO - ✅ Enregistrement des métriques et des paramètres effectué.
+2025-03-27 09:55:42,042 - INFO - 📁 Modèle sauvegardé sur MLFlow.
+2025-03-27 09:55:42,058 - INFO - 📌 Affichage des écarts de prédiction importants : 
+            y_true      y_pred       error
+count   63.000000   63.000000   63.000000
+mean   164.238095  158.605353   27.359637
+std     44.383851   31.330250   12.089821
+min     99.000000   93.832202   20.123726
+25%    131.500000  139.846179   21.754524
+50%    154.000000  153.150440   25.423393
+75%    187.000000  175.432006   28.989411
+max    326.000000  255.594202  113.970476
+2025-03-27 09:55:42,058 - INFO - 🗂️ Dossier de sauvegarde du modèle vérifié ou créé avec succès.
+2025-03-27 09:55:42,351 - INFO - 📁 Modèle sauvegardé localement : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_Final.pkl.
+2025-03-27 09:55:42,352 - INFO - 📁 Le fichier 'columns_list.pkl' a été généré avec succès !
+2025-03-27 15:59:13,445 - INFO - ✅ Script de téléchargement des données démarré avec succès (recup_raw_data.py).
+2025-03-27 15:59:13,445 - INFO - 📥 Début de téléchargement pour la table : co2cars_2021Pv23
+2025-03-27 15:59:13,445 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:15,835 - INFO - ✅ Page 1 téléchargée - 81849 enregistrements récupérés.
+2025-03-27 15:59:15,835 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:16,340 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2021Pv23 (page 2).
+2025-03-27 15:59:16,340 - INFO - 📥 Début de téléchargement pour la table : co2cars_2022Pv25
+2025-03-27 15:59:16,340 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:19,160 - INFO - ✅ Page 1 téléchargée - 100000 enregistrements récupérés.
+2025-03-27 15:59:19,160 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:20,395 - INFO - ✅ Page 2 téléchargée - 18484 enregistrements récupérés.
+2025-03-27 15:59:20,395 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:21,240 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2022Pv25 (page 3).
+2025-03-27 15:59:21,240 - INFO - 📥 Début de téléchargement pour la table : co2cars_2023Pv27
+2025-03-27 15:59:21,240 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:23,691 - INFO - ✅ Page 1 téléchargée - 100000 enregistrements récupérés.
+2025-03-27 15:59:23,691 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:24,975 - INFO - ✅ Page 2 téléchargée - 329 enregistrements récupérés.
+2025-03-27 15:59:24,975 - INFO - 🌐 Requête envoyée.
+2025-03-27 15:59:25,986 - INFO - 📌 Aucun enregistrement supplémentaire trouvé pour co2cars_2023Pv27 (page 3).
+2025-03-27 15:59:26,384 - INFO - ✅ DataFrame créé avec succès - 300662 lignes téléchargées.
+2025-03-27 15:59:26,384 - INFO - 🗂️ Dossier de sauvegarde des données brutes vérifié ou créé avec succès.
+2025-03-27 15:59:26,891 - INFO - 📁 Fichier .csv enregistré avec succès : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/raw/DF_Raw.csv
+2025-03-27 15:59:27,439 - INFO - ✅ Script de preprocessing démarré avec succès (preprocessing.py).
+2025-03-27 15:59:27,552 - INFO - ⚙️ Fichier .csv chargé avec succès : (300662 lignes).
+2025-03-27 15:59:27,553 - INFO - ✅ Toutes les colonnes nécessaires sont présentes.
+2025-03-27 15:59:27,594 - INFO - 🔍 Suppression des doublons - Lignes restantes : 251389 (initialement 300662).
+2025-03-27 15:59:27,620 - INFO - 🎯 Transformation de 'Ft' terminée - Suppression des 'unknown'.
+2025-03-27 15:59:27,682 - INFO - 🔄 Remplacement des valeurs spécifiques de 'Ft' terminé.
+2025-03-27 15:59:27,720 - INFO - 📝 Les marques ont été converties en majuscules.
+2025-03-27 15:59:27,844 - INFO - 📝 Correction des marques terminée.
+2025-03-27 15:59:27,860 - INFO - 📝 Suppression des marques peu connues.
+2025-03-27 15:59:27,943 - INFO - 📝 Suppression des occurences trop faibles.
+2025-03-27 15:59:28,012 - INFO - 📌 Nombre de lignes dont la valeur de "Ewltp (g/km)" dépasse le seuil de 22.5 : 11833.
+2025-03-27 15:59:28,021 - INFO - 🔄 Nombre de lignes après suppression des outliers : 239552.
+2025-03-27 15:59:28,085 - INFO - 📌 Nombre de lignes dont la valeur de "Fc" dépasse le seuil de 1.1 : 8925.
+2025-03-27 15:59:28,093 - INFO - 🔄 Nombre de lignes après suppression des outliers : 230627.
+2025-03-27 15:59:28,157 - INFO - 📌 Nombre de lignes dont la valeur de "M (kg)" dépasse le seuil de 117.3 : 9398.
+2025-03-27 15:59:28,166 - INFO - 🔄 Nombre de lignes après suppression des outliers : 221229.
+2025-03-27 15:59:28,234 - INFO - 📌 Nombre de lignes dont la valeur de "Ec (cm3)" dépasse le seuil de 93.1 : 39931.
+2025-03-27 15:59:28,241 - INFO - 🔄 Nombre de lignes après suppression des outliers : 181298.
+2025-03-27 15:59:28,301 - INFO - 📌 Nombre de lignes dont la valeur de "Ep (KW)" dépasse le seuil de 29.8 : 5297.
+2025-03-27 15:59:28,310 - INFO - 🔄 Nombre de lignes après suppression des outliers : 176001.
+2025-03-27 15:59:28,364 - INFO - 📌 Nombre de lignes dont la valeur de "Erwltp (g/km)" dépasse le seuil de 0.8 : 3428.
+2025-03-27 15:59:28,371 - INFO - 🔄 Nombre de lignes après suppression des outliers : 172577.
+2025-03-27 15:59:28,376 - INFO - ✅ Après filtrage successif, le nombre de lignes restantes est de : 172577.
+2025-03-27 15:59:28,405 - INFO - 🔄 Mise de côté des valeurs de 'Ft' trop peu représentées terminée.
+2025-03-27 15:59:28,423 - INFO - ✅ Encodage de la variable 'Ft' terminée.
+2025-03-27 15:59:28,465 - INFO - ✅ Encodage de la variable 'Mk' terminée.
+2025-03-27 15:59:28,465 - INFO - 🗂️ Dossier de sauvegarde des données prétraitées vérifié ou créé avec succès.
+2025-03-27 15:59:29,359 - INFO - 📁 Fichier .csv enregistré avec succès : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/data/processed/DF_Processed.csv
+2025-03-27 15:59:36,542 - INFO - ✅ Entraînement du modèle démarré avec succès (modelisation.py).
+2025-03-27 15:59:36,803 - INFO - ⚙️ Fichier .csv chargé avec succès : (172415 lignes).
+2025-03-27 15:59:36,814 - INFO - ✅ Séparation de X et y réussie.
+2025-03-27 15:59:36,837 - INFO - ✅ Split train/test effectué.
+2025-03-27 15:59:36,902 - INFO - ✅ Données normalisées avec StandardScaler.
+2025-03-27 16:00:48,349 - INFO - ✅ Modèle RandomForest entraîné avec succès.
+2025-03-27 16:00:49,709 - INFO - 📊 RMSE: 2.3398 | R²: 0.9955
+2025-03-27 16:00:49,713 - INFO - ✅ Fichier des métriques enregistré : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/outputs/metrics.json.
+2025-03-27 16:00:50,254 - INFO - ✅ Enregistrement des métriques et des paramètres effectué.
+2025-03-27 16:01:20,336 - INFO - 📁 Modèle sauvegardé sur MLFlow.
+2025-03-27 16:01:20,353 - INFO - 📌 Affichage des écarts de prédiction importants : 
+            y_true      y_pred      error
+count   54.000000   54.000000  54.000000
+mean   167.574074  161.713457  26.455524
+std     46.979964   33.912290   6.173443
+min    100.000000  118.120143  20.121774
+25%    131.250000  142.946619  22.211182
+50%    160.000000  150.706554  25.055583
+75%    184.250000  168.570443  28.672268
+max    282.000000  259.100345  50.342476
+2025-03-27 16:01:20,354 - INFO - 🗂️ Dossier de sauvegarde du modèle vérifié ou créé avec succès.
+2025-03-27 16:01:20,673 - INFO - 📁 Modèle sauvegardé localement : /Users/tiffanydalmais/Downloads/Tiffany_Datascientest/DVC_OCT24/models/RandomForest_Final.pkl.
+2025-03-27 16:01:20,673 - INFO - 📁 Le fichier 'columns_list.pkl' a été généré avec succès !

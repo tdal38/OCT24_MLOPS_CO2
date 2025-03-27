@@ -1,0 +1,25 @@
+# Projet MLOps : Streamlit + MLflow + Prometheus + Grafana
+
+Ce projet met en place une infrastructure de suivi et visualisation pour des expériences de machine learning via Streamlit, MLflow et Prometheus et Grafana.
+
+## Prérequis à installer
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Services inclus
+
+| Service     | Port Local | Description                          |Liens officiels                                                              |
+|-------------|------------|--------------------------------------|-----------------------------------------------------------------------------|
+| Streamlit   | `8501`     | Interface web pour l'entraînement    |https://streamlit.io/                                                        |
+| MLflow      | `8080`     | Suivi des expériences                |https://github.com/mlflow/mlflow/pkgs/container/mlflow                       |
+| Prometheus  | `9090`     | Scraping des métriques               |https://hub.docker.com/r/prom/prometheus                                     |
+| Grafana     | `3000`     | (Optionnel) Visualisation avancée    |https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/   |
+
+## Lancer le streamlit
+
+1. Se placer dans le dossier docker/:
+cd docker
+
+2. Lancer les containers :
+docker-compose up --build
