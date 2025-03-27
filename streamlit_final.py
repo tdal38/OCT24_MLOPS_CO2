@@ -284,7 +284,7 @@ with tab1:
         zip_path = "c02_repo.zip"
 
         # Dossier d'extraction
-        extract_to = "OCT24-MLE-CO2"
+        extract_to = "OCT24_MLOPS_CO2"
         
         # Téléchargement du dossier GitHub via GitHub si public
         if private == 0:
@@ -292,7 +292,7 @@ with tab1:
             start_time = time.time()
 
             # URL du dépôt GitHub
-            url_repo = "https://github.com/tdal38/OCT24-MLE-CO2/archive/refs/heads/main.zip"
+            url_repo = "https://github.com/tdal38/OCT24_MLOPS_CO2/archive/refs/heads/main.zip"
 
             # Télécharger le fichier ZIP
             response = requests.get(url_repo, stream=True)
@@ -352,7 +352,7 @@ with tab1:
             st.write("❌ Le fichier ZIP n'a pas été trouvé.")
 
         # Définir le chemin du dossier source
-        source_folder = "./OCT24-MLE-CO2"
+        source_folder = "./OCT24_MLOPS_CO2"
 
         # Vérifier si le dossier existe
         if not os.path.exists(source_folder):
@@ -373,7 +373,7 @@ with tab1:
             os.rmdir(source_folder)
 
     if st.checkbox("Préparation des dossiers") :
-        src = r"OCT24-MLE-CO2-main\NOV24-BDS-CO2"
+        src = r"OCT24_MLOPS_CO2-main"
         move_contents_and_remove_folder(src)
         st.write(f"✅ Traitement des dossiers et fichiers de GitHub terminée !")
 
