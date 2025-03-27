@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px 
-import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -18,7 +17,6 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from flask import Flask
 import threading
 
-import requests
 import datetime
 
 import shutil
@@ -30,7 +28,6 @@ import gdown
 
 # Librairie pour mesurer le temps écoulé
 import time
-import asyncio
 
 # Pour la requête SQL
 import urllib.parse
@@ -162,8 +159,9 @@ def download_file_with_progress(year):
         status_text = st.empty()
         downloaded_size = 0
 
-        # Nom du fichier à sauvegarder        
-        raw_dir = config.RAW_DIR
+        # Nom du fichier à sauvegarder    
+        RAW_DIR = "./data/raw"
+        raw_dir = RAW_DIR
         os.makedirs(raw_dir, exist_ok=True)
         file_name = os.path.join(raw_dir, f"DF_Full_Raw_{year}.csv")
 
@@ -289,7 +287,7 @@ mlflow.set_tracking_uri("http://mlflow:8080")
 mlflow.set_experiment("MLflow Streamlit")
 
 # Définir les onglets
-tabs = ["Téléchargement", "Exploration", "Entraînement", "Historique", "Chargement", "Lancement", "Interface", "Utilisateur Final"]
+tabs = ["Téléchargement", "Exploration", "Entraînement", "Historique", "Chargement", "Interface", "Lancement", "Utilisateur Final"]
 
 # Création des onglets
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(tabs)
@@ -400,8 +398,11 @@ with tab1:
         move_contents_and_remove_folder(src)
         st.write(f"✅ Traitement des dossiers et fichiers de GitHub terminée !")
 
-        shutil.rmtree("OCT24_MLOPS_CO2-main")
-        st.write(f"✅ Suppression du dossier inutile")
+        if os.path.exists("OCT24_MLOPS_CO2-main"):
+            shutil.rmtree("OCT24_MLOPS_CO2-main")
+            st.write("✅ Suppression du dossier inutile")
+        else:
+            st.write("ℹ️ Le dossier 'OCT24_MLOPS_CO2-main' n'existe pas, aucune suppression nécessaire.")
 
     st.header("📥 Récupération des Datasets")
 
@@ -440,7 +441,8 @@ with tab1:
         with st.spinner('Téléchargement en cours...'):
             df = download_data_sql(selected_year)
             if not df.empty:
-                raw_dir = config.RAW_DIR
+                RAW_DIR = "./data/raw"
+                raw_dir = RAW_DIR
                 os.makedirs(raw_dir, exist_ok=True)
                 output_filepath = os.path.join(raw_dir, f"DF_SQL_Raw_{selected_year}.csv")
                 df.to_csv(output_filepath, index=False)
@@ -617,16 +619,8 @@ with tab5:
             prediction = loaded_model.predict(input_data_df)
             st.success(f"📊 **Prédiction des émissions de CO₂ : {prediction[0]:.2f} g/km**")
 
-# Onglet 6 : Lancement de la Pipeline depuis DVC
+# Onglet 6 : Interface MLflow avec Prometheus
 with tab6:
-    st.header("⚙️ Lancement de la Pipeline depuis DVC")
-
-    if st.button('Exécuter la Pipeline'):
-        with st.spinner('Exécution de la commande en cours...'):
-            run_dvc_repro()
-
-# Onglet 7 : Interface MLflow avec Prometheus
-with tab7:
     st.header("📊 Interface MLflow avec Prometheus")
 
     # Requête http vers Prometheus
@@ -727,6 +721,14 @@ with tab7:
     else:
         st.info("📁 Aucune donnée disponible (le fichier CSV n'existe pas encore).")
 
+# Onglet 7 : Lancement de la Pipeline depuis DVC
+with tab7:
+    st.header("⚙️ Lancement de la Pipeline depuis DVC")
+
+    if st.button('Exécuter la Pipeline'):
+        with st.spinner('Exécution de la commande en cours...'):
+            run_dvc_repro()
+
 # Onglet 8 : Utilisateur final
 with tab8:
     # Configuration des requêtes
@@ -786,9 +788,9 @@ with tab8:
                 st.stop()
 
             # Charger les données prétraitées pour récupérer la structure des colonnes
-            df = pd.read_csv(data_path)
-            X = df.drop(['Ewltp (g/km)', 'Cn', 'Year'], axis=1)
-            all_columns = X.columns.tolist()  # Liste complète des colonnes d'origine
+            df_final = pd.read_csv(data_path)
+            X_final = df_final.drop(['Ewltp (g/km)', 'Cn', 'Year'], axis=1)
+            all_columns = X_final.columns.tolist()  # Liste complète des colonnes d'origine
             marques = [col.replace('Mk_', '') for col in all_columns if col.startswith('Mk_')]
             Mk = st.selectbox("Marque (Mk)", marques)
 
