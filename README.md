@@ -110,7 +110,7 @@ Face aux enjeux climatiques et aux régulations strictes sur les émissions de C
 **1. Cloner le dépôt :**
 
        git clone https://dagshub.com/tiffany.dalmais/OCT24_MLOPS_CO2.git
-       cd NOV24-BDS-CO2
+       cd OCT24_MLOPS_CO2
 
 **2. Créer un environnement virtuel (optionnel, mais recommandé) :**
 
@@ -132,15 +132,15 @@ Face aux enjeux climatiques et aux régulations strictes sur les émissions de C
 
 
 **6. Configurer l'authentification (optionnel mais utile pour éviter de ressaisir ses identifiants à chaque fois) :**
-       a. Ouvrir un terminal et créer/modifier le fichier ~/.netrc :
+    a. Ouvrir un terminal et créer/modifier le fichier ~/.netrc :
 
        nano ~/.netrc
 
     b. Ajouter les lignes suivantes au fichier : 
 
        machine dagshub.com # Nom du serveur distant
-       login nom_utilisateur # Nom d'utilisateur
-       password token_dagshub # Token d'authentification
+               login nom_utilisateur # Nom d'utilisateur
+               password token_dagshub # Token d'authentification
 
     c. Enregistrer les modifications et quitter l'éditeur de texte : 
 
@@ -166,6 +166,12 @@ En cas de modification de la pipeline et/ou des scripts :
         git push origin main
         git push github main
 
+En cas d'erreur lors de la commande git push github main, créer un remote supplémentaire pour GitHub :
+        git remote add github https://github.com/tdal38/OCT24_MLOPS_CO2.git
+
+Et retenter git push github main.
+
+
     c. Pousser les données volumineuses via DVC :
 
         dvc push --force
@@ -174,7 +180,7 @@ En cas de modification de la pipeline et/ou des scripts :
 
 **Les commandes suivantes doivent être exécutées depuis le dossier source.**
 
-       cd NOV24-BDS-CO2
+       cd OCT24_MLOPS_CO2
 
 **Lancer le serveur MLFlow :**
 
@@ -193,7 +199,7 @@ En cas de modification de la pipeline et/ou des scripts :
 
 **Pour lancer l'application Streamlit :**
 
-       streamlit run app.py
+       streamlit run streamlit.py
 
 *L'application s'ouvrira dans votre navigateur à l'adresse [http://localhost:8501](http://localhost:8501).*
 
