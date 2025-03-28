@@ -1,6 +1,6 @@
 stages:
   recup_raw_data:
-    cmd: python src/data/recup_raw_data.py
+    cmd: python3 src/data/recup_raw_data.py
     deps:
       - src/data/recup_raw_data.py
       - config.py
@@ -8,7 +8,7 @@ stages:
       - data/raw
 
   preprocessing:
-    cmd: python src/data/preprocessing.py
+    cmd: python3 src/data/preprocessing.py
     deps:
       - src/data/preprocessing.py
       - data/raw
@@ -17,7 +17,7 @@ stages:
       - data/processed
 
   modelisation:
-    cmd: python src/models/modelisation.py
+    cmd: python3 src/models/modelisation.py
     deps:
       - src/models/modelisation.py
       - data/processed
