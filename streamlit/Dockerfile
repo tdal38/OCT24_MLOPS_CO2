@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Exécuter Streamlit au lancement du container
-CMD ["streamlit", "run", "stream3.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "stream3.py", "--server.port=8502", "--server.address=0.0.0.0"]
