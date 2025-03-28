@@ -10,6 +10,9 @@ cd OCT24_MLOPS_CO2
 3. Installer les dépendances du projet : 
 pip install -r requirements.txt
 
+Si besoin, il est possible de mettre à jour pip via la commande : 
+pip install --upgrade pip
+
 4. Installer DVC (si ce n'est pas déjà fait) :
 pip install dvc
 
@@ -35,6 +38,10 @@ pip install mlflow dagshub
 dvc pull
 
 8. Exécuter la pipeline pour reproduire les étapes : 
+dvc repro
+
+NB : Si vous rencontrez un problème lié à la commande Python, il est possible d'ouvrir le fichier dvc.yml et de modifier "python3"
+par "python" ou "py" en fonction de votre environnement. Sauvegardez les modifications avant de relancer la commande :
 dvc repro
 
 9. Gestion des commits et des push : 
