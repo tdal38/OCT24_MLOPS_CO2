@@ -14,7 +14,7 @@ stages:
     outs:
     - path: data/raw
       hash: md5
-      md5: 5e1c8a4968529c64860f50853477fdb1.dir
+      md5: 774601bc8eea0b4d1518ef04b45e2b17.dir
       size: 16789272
       nfiles: 1
   preprocessing:
@@ -26,7 +26,7 @@ stages:
       size: 496
     - path: data/raw
       hash: md5
-      md5: 5e1c8a4968529c64860f50853477fdb1.dir
+      md5: 774601bc8eea0b4d1518ef04b45e2b17.dir
       size: 16789272
       nfiles: 1
     - path: src/data/preprocessing.py
@@ -36,8 +36,8 @@ stages:
     outs:
     - path: data/processed
       hash: md5
-      md5: e480b797b652a3abca19ac3d82b99d92.dir
-      size: 21897676
+      md5: a44b259a3a05077aad0fa6b105fd49ae.dir
+      size: 21933618
       nfiles: 1
   modelisation:
     cmd: python3 src/models/modelisation.py
@@ -48,8 +48,8 @@ stages:
       size: 496
     - path: data/processed
       hash: md5
-      md5: e480b797b652a3abca19ac3d82b99d92.dir
-      size: 21897676
+      md5: a44b259a3a05077aad0fa6b105fd49ae.dir
+      size: 21933618
       nfiles: 1
     - path: src/models/modelisation.py
       hash: md5
@@ -58,10 +58,10 @@ stages:
     outs:
     - path: models
       hash: md5
-      md5: 048bb4c9bae7dbe29f4caca0ea896765.dir
-      size: 422505713
+      md5: 0aec548ecd405a52ed96c9e9ea104be1.dir
+      size: 423306065
       nfiles: 2
     - path: outputs/metrics.json
       hash: md5
-      md5: 25ab85bf4aa3acca5b46c706532c3954
-      size: 63
+      md5: 2128dbccaab602b6f6ee68fa0376b387
+      size: 62

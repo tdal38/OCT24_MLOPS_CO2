@@ -11,30 +11,21 @@ def setup_logging(log_file='app.log', max_bytes=5*1024*1024, backup_count=5):
     :param backup_count: Nombre de fichiers de log de sauvegarde à conserver.
     :return: logger configuré.
     """
-    # Vérifier et créer le dossier des logs si nécessaire
-    log_dir = os.path.dirname(log_file)
-    if log_dir and not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-
-    # Configuration du logger
-    logger = logging.getLogger("AppLogger")
-    logger.setLevel(logging.DEBUG)
-
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    
+    # Création du gestionnaire de fichier
+    log_file = os.path.join(os.getcwd(), 'logs', 'recup_raw_data.log')
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    
     # Format du log
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-
-    # Handler pour l'enregistrement dans un fichier avec rotation
-    file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
     file_handler.setFormatter(formatter)
-
-    # Handler pour l'affichage dans la console
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-
-    # Ajouter les handlers au logger
+    
+    # Ajout du gestionnaire au logger
     logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
+    
     return logger
 
 # Exemple d'utilisation du logger
