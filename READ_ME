@@ -47,6 +47,11 @@ En cas de modification de la pipeline et/ou des scripts :
     git push origin main
     git push github main
 
+En cas d'erreur lors de la commande git push github main, créer un remote supplémentaire pour GitHub :
+	git remote add github https://github.com/tdal38/OCT24_MLOPS_CO2.git
+
+Et retenter git push github main.
+
     c. Pousser les données volumineuses via DVC :
     dvc push
 
