@@ -1,5 +1,7 @@
 """
 
+NB : Pour récupérer ce projet, il n'est pas nécessaire de refaire toutes les étapes mentionnées ci-dessus (se référer au READ_ME général).
+
 1. Structuration du projet
 
 Afin de garantir une intégration fluide entre les différents services (GitHub / DagsHub + DVC / MLFlow), 
