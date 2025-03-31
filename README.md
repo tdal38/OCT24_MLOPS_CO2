@@ -125,6 +125,7 @@ Face aux enjeux climatiques et aux régulations strictes sur les émissions de C
 
        python3 -m pip install --upgrade pip # Mise à jour de la bibliothèque des paquets Python
        pip install dvc
+       # Pour plus d'informations concernant la mise en place de DVC voir "instructions_installation_dvc"
 
 **5. Installer MLflow et dagshub :**
 
