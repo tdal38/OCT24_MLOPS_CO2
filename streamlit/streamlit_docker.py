@@ -276,10 +276,10 @@ mlflow.set_tracking_uri("http://mlflow:8080")
 mlflow.set_experiment("MLflow Streamlit")
 
 # Définir les onglets
-tabs = ["Téléchargement", "Exploration", "Entraînement", "Historique", "Chargement", "Interface", "Lancement", "Utilisateur Final"]
+tabs = ["Téléchargement", "Exploration", "Entraînement", "Historique", "Chargement", "Interface"]
 
 # Création des onglets
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(tabs)
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(tabs)
 
 # Onglet 1 : Récupération des Datasets
 with tab1:
