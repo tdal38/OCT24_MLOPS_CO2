@@ -1,6 +1,6 @@
 # Projet MLOps : Streamlit + MLflow + Prometheus + Grafana
 
-Ce projet met en place une infrastructure de suivi et visualisation pour des expériences de machine learning via Streamlit, MLflow et Prometheus et Grafana.
+Ce projet met en place une infrastructure de suivi et visualisation pour des expériences de machine learning via Streamlit, MLflow et Prometheus et Grafana
 
 ## Prérequis à installer
 
@@ -23,3 +23,58 @@ cd docker
 
 2. Lancer les containers :
 docker-compose up --build
+
+
+## Présentation de l'architecture MLOps du projet
+
+Ce projet combine plusieurs outils open-source pour assurer le suivi, la visualisation et la traçabilité des expériences de machine learning :
+- Streamlit pour l’interface utilisateur (UI)
+- MLflow pour logguer les modèles et les métriques
+- Prometheus pour exposer et scrapper les métriques
+- Grafana (optionnel) pour visualiser les métriques via des dashboards dynamiques
+- Docker & Docker Compose pour orchestrer et rendre l'ensemble portable
+
+## Fonctionnement 
+
+L'utilisateur interagit avec Streamlit, sélectionne un modèle, lance un entraînement
+
+À la fin de l'entraînement, les métriques (R²et RMSE) sont :
+- loggées dans MLflow (via mlflow.log_metric)
+- exposées à Prometheus via une métrique HTTP sur l'endpoint /metrics
+
+Prometheus scrappe automatiquement ce endpoint à intervalles réguliers (toutes les 5s)
+
+L'utilisateur peut visualiser les résulats :
+- directement dans Streamlit
+- dans MLflow (via son interface web)
+- sur Prometheus (scrapper depuis l'endpoint /metric) et visualiser depuis les dashboards Grafana 
+
+## Vue d’ensemble de l’infrastructure
+
+┌──────────────┐       log_metric + log_model       ┌─────────────┐
+│   Streamlit  │ ─────────────────────────────────▶ │   MLflow    │
+│ (User UI +   │                                    └─────────────┘
+│  Training)   │
+│              │ 
+│              │                          
+│              │      expose /metrics      
+└──────────────┘─────────────────────────► Flask server (Thread)┐
+      ▲                                                         |
+      |                                                         ▼
+┌──────────────┐           scrape /metrics            ┌──────────────┐
+│  Prometheus  │ ◀─────────────────────────────────── │  Flask Server│
+└──────────────┘                                      |  (8001 port) |
+      ▲                                               └──────────────┘
+      │             visualisation (optionnelle)
+      ▼
+┌──────────────┐
+│   Grafana    │
+└──────────────┘
+
+## Une approche détournée de Prometheus pour la traçabilité en machine learning
+
+Habituellement, Prometheus est déployé pour surveiller des applications backend ou des infrastructures système. 
+La particularité technique réside:
+- dans la création d’un serveur Flask (lancé en parallèle de Streamlit dans le même container) permettant d'exposer dynamiquement un endpoint /metrics
+- le serveur permet à Prometheus de scrapper en continu des métriques spécifiques (R² ou la RMSE) calculés après chaque entraînement de modèle
+- l'enregistrement manuel des métriques dans un fichier CSV depuis Prométheus (via un bouton sur le strealit) 
