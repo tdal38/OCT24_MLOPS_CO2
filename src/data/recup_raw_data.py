@@ -39,7 +39,8 @@ logger.info("✅ Script de téléchargement des données démarré avec succès 
 # Liste des tables disponibles sur le site de l'Agence Européenne à date : 
 # NB : Il est possible de compléter cette liste avec les années postérieures 
 # (années antérieures non compatibles avec le pre-processing actuel)
-table_list = ['co2cars_2021Pv23', 'co2cars_2022Pv25', 'co2cars_2023Pv27']
+table_list = ['co2cars_2021Pv23', 'co2cars_2022Pv25', 'co2cars_2023Pv27', 
+              'co2cars_2024Pv29', 'co2cars_2025Pv31', 'co2cars_2026Pv33']
 
 # Définition de la requête et boucle for pour l'appliquer à tous les noms de table :
 records = []
